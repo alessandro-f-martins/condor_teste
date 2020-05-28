@@ -1,0 +1,29 @@
+html, body{
+  font-family: "Lucida Grande", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Muli", Arial, sans-serif;
+}
+
+.sj-input {
+  font-family: "Fira Code", sans-serif;
+  display: inherit;
+  text-align: center;
+  border: none;
+  border-bottom: 1px solid #ccc
+}
+
+.sj-header-span {
+  font-weight: bold;
+}
+
+.sj-header-span .sj-input {
+  cursor: pointer;
+}
+
+
+.sj-card-padding {
+    padding-top: 16px !important;
+    padding-bottom: 48px !important;
+}

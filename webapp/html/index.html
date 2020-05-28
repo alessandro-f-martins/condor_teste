@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <title>Entrada de dados: Diário de Sono</title>
+
+    <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" type="text/css" /> -->
+    <link rel="stylesheet" href="../css/w3.css" type="text/css" />
+    <link rel="stylesheet" href="../css/jquery-ui.min.css" type="text/css" />
+    <link rel="stylesheet" href="../css/jquery-ui.structure.min.css" type="text/css" />
+    <link rel="stylesheet" href="../css/jquery-ui.theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../css/sleep_journal.css" type="text/css" />
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <script src="../scripts/jquery.min.js"></script>
+    <script src="../scripts/jquery-ui.min.js"></script>
+    <script src="../scripts/sleep_journal.js"></script>
+
+    </style>
+
+  </head>
+  <body>
+
+    <div class="w3-container w3-padding-16">
+      <h2 class="w3-center">Diário de Sono: Entrada de Dados</h2>
+      <div id="data-entry" class="w3-card sj-card-padding w3-margin-top w3-small">
+        <div class="w3-margin-left w3-section">
+          <span class="sj-header-span">Data da entrada: <input class="sj-input" type="text" maxlength="10" size="10" id="entry_date" name="entry_date" required></span>
+        </div>
+        <div class="w3-margin-left w3-section">
+          <span>1. A que horas você foi para a cama? <input class="sj-input" type="time" id="time_to_bed" name="time_to_bed" required></span>
+        </div>
+        <div class="w3-margin-left w3-section">
+          <span>2. A que horas você desligou as luzes para dormir? <input class="sj-input" type="time" id="time_lights_out" name="time_lights_out" required></span>
+        </div>
+        <div class="w3-margin-left w3-section">
+          <span>3. Quanto tempo você demorou para iniciar o sono? <input class="sj-input" type="text" maxlength="3" size="2" id="time_to_sleep" name="time_to_sleep" required> minutos.</span>
+        </div>
+        <div class="w3-margin-left w3-section">
+          <span>4. Quantas vezes você acordou na noite passada? <input class="sj-input" type="text" maxlength="2" size="1" id="number_times_wake" name="number_times_wake" required> vezes.</span>
+        </div>
+        <div class="w3-margin-left w3-section">
+          <span>5. Quanto tempo você ficou acordado ao longo da noite (tempo total dos despertares)? <input class="sj-input" type="text" maxlength="3" size="2" id="woke_during_night" name="woke_during_night" required> minutos.</span>
+        </div>
+        <div class="w3-margin-left w3-section">
+          <span>6. A que horas você acordou pela manhã? <input class="sj-input" type="time" id="time_wake_up" name="time_wake_up" required></span>
+        </div>
+        <div class="w3-margin-left w3-section">
+          <span>7. A que horas você se levantou da cama? <input class="sj-input" type="time" id="time_get_up" name="time_get_up" required></span>
+        </div>
+        <div class="w3-margin-left w3-section">
+          <span>8. Quantas horas você dormiu na noite passada? <input class="sj-input" type="text" maxlength="1" size="1" id="hours_sleep" name="hours_sleep" required> horas.</span>
+        </div>
+        <div class="w3-section"> 
+          <button type="button" id="include-data-row" class="w3-button w3-right w3-margin-right w3-round w3-blue">Incluir dados do dia</button>
+        </div>
+      </div>
+    </div>
+    <div class="w3-container w3-card">
+      <h2 class="w3-center" style="text-align: center">Entradas por dia</h2>
+      <div id="entries-div" class="w3-card sj-card-padding w3-margin-top w3-small">
+
+        <table id="entries-table" class="w3-table-all w3-bordered">
+          <thead class="w3-tiny">
+            <tr>
+              <td>Data</td>
+              <td>1. Hora que se deitou</td>
+              <td>2. Hora de luzes apagadas</td>
+              <td>3. Tempo para sono</td>
+              <td>4. Número de vezes que acordou</td>
+              <td>5. Tempo total acordado</td>
+              <td>6. Hora que despertou</td>
+              <td>7. Hora que se levantou</td>
+              <td>8. Horas dormidas</td>
+              <td>9. Tempo total na cama</td>
+              <td>10. Eficiência do sono</td>
+            </tr>
+          </thead>
+          <tbody class="w3-tiny"></tbody>
+        </table>
+      </div>        
+      <div class="w3-section w3-margin-top"> 
+        <button type="button" id="save-data" class="w3-button w3-right w3-margin-right w3-round w3-green w3-small">Salvar dados</button>
+      </div> 
+    </div>
+
+  </body>
+</html>
