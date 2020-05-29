@@ -14,14 +14,13 @@ h1, h2, h3, h4, h5, h6 {
   border-bottom: 1px solid #ccc
 }
 
-.sj-header-span {
-  font-weight: bold;
-}
-
-.sj-header-span .sj-input {
+.sj-time-input {
   cursor: pointer;
 }
 
+.sj-header-span {
+  font-weight: bold;
+}
 
 .sj-card-padding {
     padding-top: 16px !important;

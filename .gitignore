@@ -1,1 +1,3 @@
 condor_venv/*
+.jshintrc
+docs/rascunho*
