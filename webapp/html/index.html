@@ -6,27 +6,24 @@
 
     <title>Entrada de dados: Diário de Sono</title>
 
-    <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" type="text/css" /> -->
     <link rel="stylesheet" href="../css/w3.css" type="text/css" />
     <link rel="stylesheet" href="../css/jquery-ui.min.css" type="text/css" />
     <link rel="stylesheet" href="../css/jquery.datetimepicker.min.css" type="text/css" />
     <link rel="stylesheet" href="../css/sleep_journal.css" type="text/css" />
-
-    <!-- <link rel="stylesheet" href="../css/jquery-ui.structure.min.css" type="text/css" />
-    <link rel="stylesheet" href="../css/jquery-ui.theme.min.css" type="text/css" /> -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 
     <script src="../scripts/jquery.min.js"></script>
     <script src="../scripts/jquery-ui.min.js"></script>
     <script src="../scripts/jquery.datetimepicker.full.min.js"></script>
     <script src="../scripts/sleep_journal.js"></script>
 
-    </style>
-
   </head>
   <body>
-
-    <div class="w3-container w3-padding-16">
+    <div class="w3-container">
+      <div class="w3-left w3-margin-top">
+        <img src="../img/condor_logo.png" class="w3-image" style="max-width: 80%" alt="Condor logo"/>
+      </div>
+    </div>
+    <div class="w3-container">
       <h2 class="w3-center">Diário de Sono: Entrada de Dados</h2>
       <div id="data-entry" class="w3-card sj-card-padding w3-margin-top w3-small">
         <div class="w3-margin-left w3-section">
@@ -61,13 +58,13 @@
         </div>
       </div>
     </div>
-    <div class="w3-container w3-card">
+    <div class="w3-container w3-margin-top">
       <h2 class="w3-center" style="text-align: center">Entradas por dia</h2>
       <div id="entries-div" class="w3-card sj-card-padding w3-margin-top w3-small">
 
-        <table id="entries-table" class="w3-table-all w3-bordered">
+        <table id="entries-table" class="w3-table-all w3-bordered w3-padding-small">
           <thead class="w3-tiny">
-            <tr>
+            <tr class="w3-blue-gray">
               <td>Data</td>
               <td>Hora em que se deitou</td>
               <td>Hora em que se apagaram as luzes</td>
@@ -81,7 +78,16 @@
               <td>Eficiência do sono</td>
             </tr>
           </thead>
-          <tbody class="w3-tiny"></tbody>
+          <tbody class="w3-tiny">
+            <tr class='w3-gray w3-border-top w3-border-bottom'>
+              <td class="sj-summary-header">Resumo estatístico</td>
+              <td colspan="10"> </td>
+            </tr>
+            <tr id="min-row"><td class="sj-summary-item">Mínimo</td></tr>
+            <tr id="max-row"><td class="sj-summary-item">Máximo</td></tr>
+            <tr id="avg-row"><td class="sj-summary-item">Média</td></tr>
+            <tr id="std-row"><td class="sj-summary-item">Desvio padrão</td></tr>
+          </tbody>
         </table>
       </div>        
       <div class="w3-section w3-margin-top"> 

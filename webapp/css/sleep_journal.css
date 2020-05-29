@@ -25,4 +25,23 @@ h1, h2, h3, h4, h5, h6 {
 .sj-card-padding {
     padding-top: 16px !important;
     padding-bottom: 48px !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+
+.sj-summary-header {
+  font-weight: bold;
+  font-style: italic;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+  padding-right: 1px !important;
+  padding-left: 4px !important;
+}
+
+.sj-summary-item {
+  font-style: italic;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+  padding-right: 1px !important;
+  padding-left: 9px !important;
 }
