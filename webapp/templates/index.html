@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <title>Entrada de dados: Diário de Sono</title>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/w3.css')}}" type="text/css" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/jquery-ui.min.css')}}" type="text/css" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/jquery.datetimepicker.min.css')}}" type="text/css" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/Chart.min.css')}}" type="text/css" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/sleep_journal.css')}}" type="text/css" />   
+
+    <script src="{{url_for('static', filename='scripts/jquery.min.js')}}"></script>
+    <script src="{{url_for('static', filename='scripts/jquery-ui.min.js')}}"></script>
+    <script src="{{url_for('static', filename='scripts/jquery.datetimepicker.full.min.js')}}"></script>
+    <script src="{{url_for('static', filename='scripts/Chart.min.js')}}"></script>
+    <script src="{{url_for('static', filename='scripts/sleep_charts.js')}}"></script>
+    <script src="{{url_for('static', filename='scripts/sleep_journal.js')}}"></script>
+
+  </head>
+  <body>
+    <header class="w3-container">
+      <div class="w3-left w3-margin-top">
+        <img src="{{url_for('static', filename='img/condor_logo.png')}}" class="w3-image" style="max-width: 80%" alt="Condor logo"/>
+      </div>
+    </header>
+
+    <section class="w3-container">
+      <h2 class="w3-center">Diário de Sono: Entrada de Dados</h2>
+      <div id="data-entry" class="w3-card sj-card-padding w3-margin-top w3-small">
+        <div class="w3-margin-left w3-section">
+          <span class="sj-header-span">Data da registro: <input class="sj-input sj-time-input" type="text" maxlength="10" size="10" id="entry_date" name="entry_date" required></span>
+        </div>
+        <div class="w3-margin-left w3-section">
+          <span>1. A que horas você foi para a cama? <input class="sj-input sj-time-input" type="text" id="time_to_bed" name="time_to_bed" required></span>
+        </div>
+        <div class="w3-margin-left w3-section">
+          <span>2. A que horas você desligou as luzes para dormir? <input class="sj-input sj-time-input" type="text" id="time_lights_out" name="time_lights_out" required></span>
+        </div>
+        <div class="w3-margin-left w3-section">
+          <span>3. Quanto tempo você demorou para iniciar o sono? <input class="sj-input" type="text" maxlength="3" size="2" id="delay_to_sleep" name="delay_to_sleep" required> minutos.</span>
+        </div>
+        <div class="w3-margin-left w3-section">
+          <span>4. Quantas vezes você acordou na noite passada? <input class="sj-input" type="text" maxlength="2" size="1" id="number_times_wake" name="number_times_wake" required> vezes.</span>
+        </div>
+        <div class="w3-margin-left w3-section">
+          <span>5. Quanto tempo você ficou acordado ao longo da noite (tempo total dos despertares)? <input class="sj-input" type="text" maxlength="3" size="2" id="woke_during_night" name="woke_during_night" required> minutos.</span>
+        </div>
+        <div class="w3-margin-left w3-section">
+          <span>6. A que horas você acordou pela manhã? <input class="sj-input sj-time-input" type="text" id="time_wake_up" name="time_wake_up" required></span>
+        </div>
+        <div class="w3-margin-left w3-section">
+          <span>7. A que horas você se levantou da cama? <input class="sj-input sj-time-input" type="text" id="time_get_up" name="time_get_up" required></span>
+        </div>
+        <div class="w3-section">
+          <button type="button" id="include-data-row" class="w3-button w3-right w3-margin-right w3-round w3-blue">Incluir dados do dia</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="w3-container w3-margin-top" style="padding-bottom: 16px">
+      <h2 class="w3-center" style="text-align: center">Registros por dia</h2>
+      <div id="entries-div" class="w3-card sj-card-padding w3-margin-top w3-small">
+
+        <table id="entries-table" class="w3-table-all w3-bordered w3-padding-small">
+          <thead class="w3-tiny">
+            <tr class="w3-blue-gray"></tr>
+          </thead>
+          <tbody class="w3-tiny">
+            <tr id="stat-header-row" class='w3-gray w3-border-top w3-border-bottom'>
+              <th class="sj-stat-header">Resumo estatístico</th>
+              <th colspan="10"></th>
+            </tr>
+            <tr id="stat-min-row"><th class="sj-stat-item">Mínimo</th></tr>
+            <tr id="stat-max-row"><th class="sj-stat-item">Máximo</th></tr>
+            <tr id="stat-mean-row"><th class="sj-stat-item">Média</th></tr>
+            <tr id="stat-std-row"><th class="sj-stat-item">Desvio padrão</th></tr>
+          </tbody>
+        </table>
+
+        <div class="w3-display-container w3-margin-top">
+          <button type="button" id="download-button" class="w3-button w3-display-topleft w3-margin-left w3-round w3-amber w3-small">Baixar arquivo CSV</button>
+            <a id="download-ahref"></a>
+            <button type="button" id="display-charts" class="w3-button w3-display-topmiddle w3-round w3-aqua w3-small">Gerar gráficos - Todos os indicadores</button>
+          <button type="button" id="save-data" class="w3-button w3-display-topright w3-margin-right w3-round w3-green w3-small">Salvar dados</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="w3-container w3-margin-top" style="padding-bottom: 16px">
+      <h2 class="w3-center" style="text-align: center">Análise gráfica</h2>
+      <div class="w3-card w3-display-container sj-card-padding w3-margin-top" style="width: 100%; height: 350px">
+        <div id="lineplot-div" style="width: 1100px; height: 300px" class="w3-padding-16 w3-display-topmiddle">
+          <canvas id="lineplot" width="1100" height="300" aria-label="Timeplot Area" role="img"></canvas>
+        </div>        
+      </div>
+    </section>
+
+  </body>
+</html>

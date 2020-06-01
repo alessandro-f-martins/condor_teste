@@ -1,3 +1,5 @@
 condor_venv/*
 .jshintrc
 docs/rascunho*
+/webapp/__pycache__
+/webapp/__pycache__/*
