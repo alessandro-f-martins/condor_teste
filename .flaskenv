@@ -9,9 +9,4 @@ FLASK_RUN_HOST=0.0.0.0
 
 # Variaveis de conexao ao banco de dados:
 
-DB_USER=afmartins
-DB_PASSWD=2112Rush
-DB_HOST=localhost
-DB_PORT=5432
-DB_DATABASE=teste_auspex
-
+DB_PATH = '/home/afmartins/workspace/projects/condor/db/sleepJournal.db'

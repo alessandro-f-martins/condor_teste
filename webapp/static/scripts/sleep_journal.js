@@ -1,4 +1,4 @@
-const sleepJournal = {
+var sleepJournal = {
   entry_date: {label: 'Data', data: [], stats: {min: 0, max: 0, mean: 0, std: 0}, calc: false},
   time_to_bed: {label: 'Hora em que se deitou', data: [], stats: {min: 0, max: 0, mean: 0, std: 0}, calc: false},
   time_lights_out: {label: 'Hora em que se apagaram as luzes', data: [], stats: {min: 0, max: 0, mean: 0, std: 0}, calc: false},
@@ -26,6 +26,52 @@ function updateStats(sj, featureId) {
   sj[featureId].stats.mean = (sj[featureId].data.reduce((x, y) => x + y) / sj[featureId].data.length).toFixed(2);
   sj[featureId].stats.std = Math.sqrt(
     sj[featureId].data.reduce((x, y) => x + (y - sj[featureId].stats.mean)**2, 0) / sj[featureId].data.length).toFixed(2);
+}
+
+function saveToServer() {
+  let sjData = {};
+  for (let feat of Object.keys(sleepJournal))
+    sjData[feat] = sleepJournal[feat].data;
+
+  $.ajax({
+    url: '/saveData', type: 'post',
+    data: {
+      sj: JSON.stringify(sjData)
+    }
+  })
+    .done(ajax_result => {
+      alert('Dados salvos com êxito!');
+    })
+    .fail(() => {
+      alert('Houve um problema com a gravação dos dados.');
+    })
+  
+}
+
+function loadFromServer() {
+  $.ajax({
+    url: '/loadData',
+    type: 'get'
+  })
+    .done(ajax_result => {
+      const loadResult = JSON.parse(ajax_result);
+
+      Object.keys(loadResult).forEach(feature => {
+        if (feature.startsWith('time_'))
+          sleepJournal[feature].data = loadResult[feature].map(x => new Date(x));
+        else
+          sleepJournal[feature].data = loadResult[feature];
+        
+        updateStats(sleepJournal, feature);
+      });
+
+      updateDisplayTable(sleepJournal);
+      alert('Dados recuperados com êxito!');
+    })
+    .fail(() => {
+      alert('Houve um problema com a recuperação dos dados.');
+    })
+
 }
 
 function generateStatRows(sj, featureId) {
@@ -220,6 +266,8 @@ $(document).ready(function() {
 
   $('#include-data-row').click(function() {insertJournalTableRow();});
   $('#display-charts').click(function() {showJournalChart($('#lineplot'), sleepJournal);});
-  $('#save-data').click(function() { });
+  $('#save-data').click(function() { saveToServer() });
+  $('#load-data').click(function() { loadFromServer() });
+
   $('#download-button').click(function() {downloadCSV();});
 });

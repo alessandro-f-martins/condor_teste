@@ -1,0 +1,1 @@
+CREATE TABLE sleep_journal (entry_date TEXT, time_to_bed TEXT, time_lights_out TEXT, delay_to_sleep NUMERIC, number_times_wake NUMERIC, woke_during_night NUMERIC, time_wake_up TEXT, time_get_up TEXT, hours_slept NUMERIC, total_time_in_bed NUMERIC, sleep_efficiency NUMERIC);

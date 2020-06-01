@@ -60,9 +60,9 @@
       </div>
     </section>
 
-    <section class="w3-container w3-margin-top" style="padding-bottom: 16px">
+    <section class="w3-container w3-margin-top" > <!-- style="padding-bottom: 16px" -->
       <h2 class="w3-center" style="text-align: center">Registros por dia</h2>
-      <div id="entries-div" class="w3-card sj-card-padding w3-margin-top w3-small">
+      <div id="entries-div" class="w3-card sj-card-padding-2 w3-margin-top w3-small">
 
         <table id="entries-table" class="w3-table-all w3-bordered w3-padding-small">
           <thead class="w3-tiny">
@@ -80,11 +80,20 @@
           </tbody>
         </table>
 
-        <div class="w3-display-container w3-margin-top">
-          <button type="button" id="download-button" class="w3-button w3-display-topleft w3-margin-left w3-round w3-amber w3-small">Baixar arquivo CSV</button>
+        <div class="w3-row w3-margin-top">
+          <div class="w3-quarter w3-center">
+            <button type="button" id="download-button" class="w3-button w3-round w3-amber w3-small">Baixar arquivo CSV</button>
             <a id="download-ahref"></a>
-            <button type="button" id="display-charts" class="w3-button w3-display-topmiddle w3-round w3-aqua w3-small">Gerar gráficos - Todos os indicadores</button>
-          <button type="button" id="save-data" class="w3-button w3-display-topright w3-margin-right w3-round w3-green w3-small">Salvar dados</button>
+          </div>
+          <div class="w3-quarter w3-center">
+            <button type="button" id="display-charts" class="w3-button w3-round w3-aqua w3-small">Gerar gráficos - Todos os indicadores</button>
+          </div>
+          <div class="w3-quarter w3-center">
+            <button type="button" id="save-data" class="w3-button w3-round w3-green w3-small">Salvar dados</button>
+          </div>
+          <div class="w3-quarter w3-center">
+            <button type="button" id="load-data" class="w3-button w3-round w3-brown w3-small">Recuperar dados</button>
+          </div>
         </div>
       </div>
     </section>
