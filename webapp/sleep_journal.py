@@ -17,7 +17,6 @@ FEATURE_NAMES = ['entry_date', 'time_to_bed', 'time_lights_out',
                  'delay_to_sleep', 'number_times_wake', 'woke_during_night',
                  'time_wake_up', 'time_get_up', 'hours_slept',
                  'total_time_in_bed', 'sleep_efficiency']
-STAT_NAMES = ['feature', 'min', 'max', 'mean', 'std']
 
 app = Flask(__name__)
 
@@ -72,20 +71,13 @@ def load_data():
 
     db.close()
 
+    if not len(data):
+        return 'no_data'
+
     for row in data:
         for idx, feat in enumerate(FEATURE_NAMES):
             if feat not in sj:
                 sj[feat] = []
             sj[feat].append(row[idx])
 
-    ret = ujson.dumps(sj)
-    print('##DEBUG: rows: %s' % ret)
-    return ret
-
-
-# sqlite> select * from sleep_journal;
-
-# entry_date|time_to_bed|time_lights_out|delay_to_sleep|number_times_wake|woke_during_night|time_wake_up|time_get_up|hours_slept|total_time_in_bed|sleep_efficiency
-# 31/05/2020|2020-05-31T02:30:00.000Z|2020-05-31T03:00:00.000Z|30|2|5|2020-05-31T11:00:00.000Z|2020-05-31T11:10:00.000Z|26700000|31200000|0.85576923076923
-# 01/06/2020|2020-06-01T03:00:00.000Z|2020-06-01T03:10:00.000Z|40|3|60|2020-06-01T11:10:00.000Z|2020-06-01T11:20:00.000Z|22800000|30000000|0.76
-
+    return ujson.dumps(sj)

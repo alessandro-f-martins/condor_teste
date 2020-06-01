@@ -54,6 +54,11 @@ function loadFromServer() {
     type: 'get'
   })
     .done(ajax_result => {
+      if (ajax_result == 'no_data') {
+        alert('Não existem dados salvos.');
+        return false;
+      }
+
       const loadResult = JSON.parse(ajax_result);
 
       Object.keys(loadResult).forEach(feature => {
