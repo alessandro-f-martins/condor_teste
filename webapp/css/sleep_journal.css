@@ -6,6 +6,11 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Muli", Arial, sans-serif;
 }
 
+#download-ahref {
+  text-decoration: none;
+  /* display:none; */
+}
+
 .sj-input {
   font-family: "Fira Code", sans-serif;
   display: inherit;
@@ -23,13 +28,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .sj-card-padding {
-    padding-top: 16px !important;
-    padding-bottom: 48px !important;
-    padding-left: 8px !important;
-    padding-right: 8px !important;
+  padding-top: 16px !important;
+  padding-bottom: 48px !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
 }
 
-.sj-summary-header {
+.sj-stat-header {
   font-weight: bold;
   font-style: italic;
   padding-top: 1px !important;
@@ -38,10 +43,18 @@ h1, h2, h3, h4, h5, h6 {
   padding-left: 4px !important;
 }
 
-.sj-summary-item {
+.sj-stat-item {
+  font-weight: bold;
   font-style: italic;
   padding-top: 1px !important;
   padding-bottom: 1px !important;
   padding-right: 1px !important;
   padding-left: 9px !important;
+}
+
+.sj-stat-data {
+  font-style: italic;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+  padding-right: 1px !important;
 }

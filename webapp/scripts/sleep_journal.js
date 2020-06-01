@@ -1,108 +1,225 @@
 const sleepJournal = {
-  total_time_in_bed: [],
-  sleep_efficiency: []
-};
+  entry_date: {label: 'Data', data: [], stats: {min: 0, max: 0, mean: 0, std: 0}, calc: false},
+  time_to_bed: {label: 'Hora em que se deitou', data: [], stats: {min: 0, max: 0, mean: 0, std: 0}, calc: false},
+  time_lights_out: {label: 'Hora em que se apagaram as luzes', data: [], stats: {min: 0, max: 0, mean: 0, std: 0}, calc: false},
+  delay_to_sleep: {label: 'Tempo para dormir (min)', data: [], stats: {min: 0, max: 0, mean: 0, std: 0}, calc: false},
+  number_times_wake: {label: 'Número de vezes que acordou', data: [], stats: {min: 0, max: 0, mean: 0, std: 0}, calc: false},
+  woke_during_night: {label: 'Tempo total acordado (min)', data: [], stats: {min: 0, max: 0, mean: 0, std: 0}, calc: false},
+  time_wake_up: {label: 'Hora em que despertou', data: [], stats: {min: 0, max: 0, mean: 0, std: 0}, calc: false},
+  time_get_up: {label: 'Hora em que se levantou', data: [], stats: {min: 0, max: 0, mean: 0, std: 0}, calc: false},
+  hours_slept: {label: 'Horas dormidas', data: [], stats: {min: 0, max: 0, mean: 0, std: 0}, calc: true},
+  total_time_in_bed: {label: 'Tempo total na cama', data: [], stats: {min: 0, max: 0, mean: 0, std: 0}, calc: true},
+  sleep_efficiency: {label: 'Eficiência do sono', data: [], stats: {min: 0, max: 0, mean: 0, std: 0}, calc: true}
+}
 
 function getJournalRow(rowNo) {
   let retRow = {};
-  for (const colName of Object.getOwnPropertyNames(sleepJournal)) {
-    retRow[colName] = sleepJournal[colName][rowNo];
+  for (const colName of Object.keys(sleepJournal)) {
+    retRow[colName] = sleepJournal[colName].data[rowNo];
   };
   return retRow;
 }
 
-function getToday() {
-  const today = new Date();
-  return String(today.getDate()).padStart(2, '0') +
-    '/' + String(today.getMonth() + 1).padStart(2, '0') +
-    '/' + today.getFullYear();
+function updateStats(sj, featureId) {
+  sj[featureId].stats.min = Math.min(...sj[featureId].data);
+  sj[featureId].stats.max = Math.max(...sj[featureId].data);
+  sj[featureId].stats.mean = (sj[featureId].data.reduce((x, y) => x + y) / sj[featureId].data.length).toFixed(2);
+  sj[featureId].stats.std = Math.sqrt(
+    sj[featureId].data.reduce((x, y) => x + (y - sj[featureId].stats.mean)**2, 0) / sj[featureId].data.length).toFixed(2);
+}
+
+function generateStatRows(sj, featureId) {
+  for (const stat of Object.keys(sj[featureId].stats)) {
+    let statToShow = sj[featureId].stats[stat];
+
+    if (featureId.startsWith('time_'))
+      statToShow = 'N/A';
+    else if (featureId == 'sleep_efficiency')
+      statToShow = (Math.round(10000 * statToShow) / 100) + '%';
+    else if (featureId == 'total_time_in_bed' || featureId == 'hours_slept')
+      statToShow = millisToFmtTime(statToShow);
+
+    $(`#stat-${stat}-row`).append($(`<td class="sj-stat-data">${statToShow}</td>`));
+  }
+}
+
+function dateToStr(d, withTime=false) {
+  let ret =  String(d.getDate()).padStart(2, '0') +
+    '/' + String(d.getMonth() + 1).padStart(2, '0') +
+    '/' + d.getFullYear();
+  if (withTime) {
+    ret += ' ' + String(d.getHours()).padStart(2, 0) +
+      ':' + String(d.getMinutes()).padStart(2, 0);
+  }
+  return ret; 
 }
 
 function strToDate(strDate) {
   const dVals = strDate.split(/[ \/:]/);
+  if (dVals.length == 3)
+    return new Date(dVals[2], dVals[1] - 1, dVals[0]);
   return new Date(dVals[2], dVals[1] - 1, dVals[0], dVals[3], dVals[4]);
 }
 
 function millisToFmtTime(tMillis) {
-  const mins = tMillis/60000;
+  const mins = Math.round(tMillis/60000);
   const hours = Math.floor(mins/60);
 
   return (hours > 0 ? hours + 'h' : '') + String(mins % 60).padStart(2, '0') + 'm';
 }
 
-// function generateStats(colName) {
-//   const 
+function getActualSleptTime(rowIdx, totaTimeInBed) {
+  const timeBeforeSleep = sleepJournal.time_lights_out.data[rowIdx] - sleepJournal.time_to_bed.data[rowIdx];
+  const sleepInterruptions = (sleepJournal.delay_to_sleep.data[rowIdx] + sleepJournal.woke_during_night.data[rowIdx]) * 60000;
+  const timeAfterWakeup = (sleepJournal.time_get_up.data[rowIdx] - sleepJournal.time_wake_up.data[rowIdx]);
 
-// }
+  return totaTimeInBed - timeBeforeSleep - sleepInterruptions - timeAfterWakeup;
+}
 
-function insertJournalTableRow() {
-  let tableRowToInsert = $('<tr></tr>');
-  let valToInsert;
-  let insIdx = sleepJournal.entry_date.indexOf($('#entry_date').val());
+function downloadCSV() {
+  const saveFileName = 'sleepJournal.csv';
+  let csvToDownload = '';
+  $('#entries-table > thead > tr').children().toArray().forEach(header => {
+    csvToDownload += header.innerText + ',';
+  });
+  csvToDownload = csvToDownload.slice(0, -1) + '\n';
 
-  if (insIdx == -1)
-    insIdx = sleepJournal.entry_date.length;
-  else {
-    $('#entries-table > tbody')
-      .find(`td:contains("${sleepJournal.entry_date[insIdx]}")`)
-      .parent().remove();
-  }
-
-  $('#data-entry').find('.sj-input').toArray().forEach(featureName => {
-    valToInsert = $(`#${featureName.id}`).val();
-    tableRowToInsert.append($(`<td>${valToInsert}</td>`));
-
-    if (valToInsert.indexOf(':') != -1)
-      valToInsert = strToDate(valToInsert);
-    else if (valToInsert.indexOf('/') == -1)
-      valToInsert = parseInt(valToInsert);
-
-    sleepJournal[featureName.id][insIdx] = valToInsert;    
+  let rowToAppend;
+  $('#entries-table > tbody').children().toArray().forEach(row => {
+    rowToAppend = '';
+    $(row).children().toArray().forEach(cell => {
+      rowToAppend += cell.innerText + ',';
+    });  
+    csvToDownload += rowToAppend.slice(0, -1) + '\n';
   });
 
-  sleepJournal.total_time_in_bed[insIdx] =
-    sleepJournal.time_get_up[insIdx] - sleepJournal.time_to_bed[insIdx];
+  if (window.navigator.msSaveOrOpenBlob)
+      window.navigator.msSaveOrOpenBlob(csvToDownload, saveFileName);
+  else {
+    $('#download-ahref')
+      .attr('href', URL.createObjectURL(new Blob([csvToDownload], {type: 'text/csv'})))
+      .attr('download', saveFileName);
+    $('#download-ahref')[0].click();
+  }
+}
 
-  tableRowToInsert.append(
-    $(`<td>${millisToFmtTime(sleepJournal.total_time_in_bed[insIdx])}</td>`)
-  ); 
-  
-  let actualSleptTime = sleepJournal.total_time_in_bed[insIdx] -
-    ((sleepJournal.delay_to_sleep[insIdx] + sleepJournal.woke_during_night[insIdx]) * 1000 +
-    (sleepJournal.time_get_up[insIdx] - sleepJournal.time_wake_up[insIdx]));
-  
-  sleepJournal.sleep_efficiency.push(
-    actualSleptTime / sleepJournal.total_time_in_bed[insIdx]
-  );
+function insertJournalTableRow() {
+  let valToInsert;
+  let entryDate = $('#entry_date').val();
+  let insIdx = sleepJournal.entry_date.data.indexOf(entryDate);
+  let replaceValue = 0;
 
-  tableRowToInsert.append(
-    $(`<td>${Math.round(10000 * sleepJournal.sleep_efficiency[insIdx])/100}%</td>`)
-  );
- 
-  $('#entries-table > tbody').prepend(tableRowToInsert);
-  window.scroll(0, $('#entries-div').offset().top);
+  if (insIdx == -1) {
+    for (insIdx = 0;
+      insIdx < sleepJournal.entry_date.data.length && strToDate(entryDate) >= strToDate(sleepJournal.entry_date.data[insIdx]); insIdx++);
+  }
+  else
+    replaceValue = 1;
+
+  Object.keys(sleepJournal).forEach(feature => {
+    if (!sleepJournal[feature].calc) {
+      valToInsert = $(`#${feature}`).val();
+
+      if (valToInsert.indexOf(':') != -1)
+        valToInsert = strToDate(valToInsert);
+      else if (valToInsert.indexOf('/') == -1)
+        valToInsert = parseInt(valToInsert);
+
+      sleepJournal[feature].data.splice(insIdx, replaceValue, valToInsert);
+      if (feature !== 'entry_date')
+        updateStats(sleepJournal, feature);
+    }
+  });
+
+  const totaTimeInBed = sleepJournal.time_get_up.data[insIdx] - sleepJournal.time_to_bed.data[insIdx];
+  const hoursSlept = getActualSleptTime(insIdx, totaTimeInBed);
+  const sleepEfficiency = hoursSlept / totaTimeInBed;
+
+  sleepJournal.total_time_in_bed.data.splice(insIdx, replaceValue, totaTimeInBed);
+  sleepJournal.hours_slept.data.splice(insIdx, replaceValue, hoursSlept);
+  sleepJournal.sleep_efficiency.data.splice(insIdx, replaceValue, sleepEfficiency);
+
+  ['hours_slept', 'total_time_in_bed', 'sleep_efficiency'].forEach(featureId => {
+    updateStats(sleepJournal, featureId);
+  });
+
+  updateDisplayTable(sleepJournal);
+
+  console.log('sleepJournal: ');
+  console.log(JSON.stringify(sleepJournal));
+}
+
+function updateDisplayTable(sj) {
+
+  $('#entries-table > tbody tr').filter(':not([id^="stat"])').remove();
+  $('.sj-stat-data').remove();
+  let dataRowSet = '';
+
+  sj.entry_date.data.forEach((entry, idx) => {
+    let dataRow = '<tr>';
+    let cellData;
+
+    Object.keys(sj).forEach(feature => {
+      cellData = sj[feature].data[idx];
+
+      if (feature.startsWith('time_'))
+        cellData = dateToStr(cellData, true);
+      else if (feature == 'hours_slept' || feature == 'total_time_in_bed')
+        cellData = millisToFmtTime(cellData);
+      else if (feature == 'sleep_efficiency')
+        cellData = Math.round(10000 * cellData)/100 + '%';
+
+      dataRow += `<td>${cellData}</td>`;
+    });
+    dataRowSet += dataRow + '</tr>' 
+  });
+  
+  $('#stat-header-row').before($(dataRowSet));
+  Object.keys(sj).forEach(feature => {
+    if (feature !== 'entry_date')
+      generateStatRows(sj, feature);
+  });
+  window.scroll(0, $('#entries-div').offset().top - 160);
 }
 
 
 $(document).ready(function() {
+  // Inicializa os datetimepickers:
   jQuery.datetimepicker.setLocale('pt');
-
-  $('#data-entry').find('.sj-input').toArray().forEach(featureName => {
-    sleepJournal[featureName.id] = [];    
-  });
-
   $('#entry_date')
-    .val(getToday())
-    .datetimepicker({format:'d/m/Y', timepicker: false});
-
+    .val(dateToStr(new Date()))
+    .datetimepicker({format:'d/m/Y', timepicker: false})
+    .change(function() {
+      $('#data-entry input').filter(`[id!="entry_date"]`).val('');
+      $('#time_to_bed').val($(this).val());
+    });
+  
   $('#data-entry').find('[id^="time_"]').datetimepicker({format:'d/m/Y H:i'});
+  $('#time_to_bed').change(function() {$('#time_lights_out').val($(this).val());});
+  $('#time_lights_out').change(function() {$('#time_wake_up').val($(this).val());});
+  $('#time_wake_up').change(function() {$('#time_get_up').val($(this).val());});
 
-  $('#include-data-row').click(function() {
-    insertJournalTableRow();
+  let graphableFeatures = Object.keys(graphFeatureCfg);
+
+  Object.keys(sleepJournal).forEach(feature => {
+    let headerCol = ($(`<th>${sleepJournal[feature].label}</th>`));
+    if (sleepJournal[feature].calc)
+      headerCol.css('font-style', 'italic');
+    if (graphableFeatures.includes(feature)) {
+      headerCol
+        .css({textDecoration: 'underline',
+          fontFamily: 'bold', cursor: 'pointer'})
+        .click(function() {
+          showJournalChart($('#lineplot'), sleepJournal, feature);
+        });
+    }
+    $('#entries-table > thead > tr').append(headerCol);
   });
 
-  $('#save-data').click(function() {
+  // Botoes:
 
-  });
-
+  $('#include-data-row').click(function() {insertJournalTableRow();});
+  $('#display-charts').click(function() {showJournalChart($('#lineplot'), sleepJournal);});
+  $('#save-data').click(function() { });
+  $('#download-button').click(function() {downloadCSV();});
 });
