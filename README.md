@@ -72,7 +72,7 @@ A aplicação aqui descrita e disponível para *download* e instalação faz par
 4. Execute o servidor com o seguinte comando:
 
    ```shell
-$ flask run
+   $ flask run
    ```
 
 5. Acesse o aplicativo via browser em `http://localhost:5000`
@@ -114,6 +114,8 @@ Os gráficos podem ser acessados pelo botão *Gerar gráficos - Todos os indicad
 Na tela com todos os indicadores à mostra, pode-se ocultar um ou mais deles clicando-se em sua legenda:
 
 ![Isolando índices no gráfico](./docs/Teste_Condor-Isola-Indice.png)
+
+
 
 ### e) Gravação dos dados em arquivo CSV:
 
