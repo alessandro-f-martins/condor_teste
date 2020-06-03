@@ -7,7 +7,6 @@ documents are passed as JSON objects.
 '''
 
 import os
-import numpy as np
 import ujson
 import sqlite3
 from flask import Flask, request, render_template, g
@@ -19,6 +18,18 @@ FEATURE_NAMES = ['entry_date', 'time_to_bed', 'time_lights_out',
                  'total_time_in_bed', 'sleep_efficiency']
 
 app = Flask(__name__)
+
+
+def convert_transpose(dic):
+    new_m = []
+    keys = list(dic.keys())
+    rows = len(dic[keys[0]])
+    for i in range(rows):
+        new_m.append([])
+        for j in range(len(keys)):
+            new_m[-1].append(dic[keys[j]][i])
+
+    return new_m
 
 
 def get_db():
@@ -43,7 +54,7 @@ def index():
 @app.route("/saveData", methods=['POST'])
 def save_data():
     sj = ujson.loads(request.form.get('sj'))
-    rows = np.array([sj[k] for k in sj.keys()]).T.tolist()
+    rows = convert_transpose(sj)
 
     db = get_db()
     cur = db.cursor()
